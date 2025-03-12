@@ -21,4 +21,9 @@ class PetService extends Service
             "status" => "available",
         ]);
     }
+
+    public function deletePet(int $petId): Response
+    {
+        return Http::delete("{$this->baseUrl}/pet/{$petId}");
+    }
 }
