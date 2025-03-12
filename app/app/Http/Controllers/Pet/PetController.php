@@ -25,6 +25,12 @@ class PetController extends Controller
     {
         $pets = $this->petService->getAllPets()->json();
 
+        foreach ($pets as &$pet) {
+            if (isset($pet['id'])) {
+                $pet['id'] = (string) $pet['id'];
+            }
+        }
+
         return Inertia::render("pets/Index", [
             "pets" => $pets,
         ]);
@@ -33,13 +39,31 @@ class PetController extends Controller
     public function destroy($id)
     {
         try {
-            $response = $this->petService->deletePet($id);
+            $response = $this->petService->deletePet((int) $id);
 
             return redirect()->route("pets.index")
                 ->with('success', 'Pet deleted successfully');
         } catch (\Exception $e) {
             return redirect()->route("pets.index")
                 ->with('error', 'Failed to delete pet: ' . $e->getMessage());
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $pet = $this->petService->getPetById($id)->json();
+
+            if (isset($pet['id'])) {
+                $pet['id'] = (string) $pet['id'];
+            }
+
+            return Inertia::render("pets/Show", [
+                "pet" => $pet,
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('pets.index')
+                ->with('error', 'Pet not found: ' . $e->getMessage());
         }
     }
 }

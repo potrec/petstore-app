@@ -26,4 +26,9 @@ class PetService extends Service
     {
         return Http::delete("{$this->baseUrl}/pet/{$petId}");
     }
+
+    public function getPetById(string $id): Response
+    {
+        return Http::get("{$this->baseUrl}/pet/{$id}");
+    }
 }

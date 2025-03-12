@@ -13,15 +13,13 @@ interface Tag {
     name: string;
 }
 
-type PetStatus = 'available' | 'pending' | 'sold';
-
 interface Pet {
-    id: number;
+    id: string;
     category?: Category;
     name: string;
     photoUrls: string[];
     tags: Tag[];
-    status: PetStatus;
+    status: string;
 }
 
 defineProps({
@@ -45,10 +43,14 @@ const getPetImageUrl = (pet: Pet): string => {
     return 'https://placehold.co/400x300/EAEAEA/999999?text=No+Image+Available';
 };
 
-const deletePet = (petId: number) => {
+const deletePet = (petId: string) => {
     if (confirm('Are you sure you want to delete this pet?')) {
         router.delete(`/pets/${petId}`);
     }
+};
+
+const showDetails = (petId: string) => {
+    router.visit(route('pets.show', { id: petId }));
 };
 </script>
 
@@ -69,9 +71,7 @@ const deletePet = (petId: number) => {
                     </Badge>
                 </CardContent>
                 <CardFooter>
-                    <Button variant="outline" class="mr-2 w-full">
-                        <router-link :to="{ name: 'pets.show', params: { id: pet.id } }"> View Details </router-link>
-                    </Button>
+                    <Button variant="outline" class="mr-2 w-full" @click="showDetails(pet.id)"> View Details </Button>
                     <Button variant="outline" class="w-full">
                         <router-link :to="{ name: 'pets.edit', params: { id: pet.id } }"> Edit </router-link>
                     </Button>
