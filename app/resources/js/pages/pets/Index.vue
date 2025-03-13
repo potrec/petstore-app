@@ -52,12 +52,16 @@ const deletePet = (petId: string) => {
 const showDetails = (petId: string) => {
     router.visit(route('pets.show', { id: petId }));
 };
+
+const editPet = (petId: string) => {
+    router.visit(route('pets.edit', { id: petId }));
+};
 </script>
 
 <template>
     <div class="container mx-auto py-8">
         <h1 class="mb-6 text-3xl font-bold">Pets</h1>
-
+        <Button class="mb-4" @click="router.visit(route('pets.create'))">Add New Pet</Button>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card v-for="pet in pets" :key="pet.id" class="overflow-hidden">
                 <CardHeader>
@@ -72,9 +76,7 @@ const showDetails = (petId: string) => {
                 </CardContent>
                 <CardFooter>
                     <Button variant="outline" class="mr-2 w-full" @click="showDetails(pet.id)"> View Details </Button>
-                    <Button variant="outline" class="w-full">
-                        <router-link :to="{ name: 'pets.edit', params: { id: pet.id } }"> Edit </router-link>
-                    </Button>
+                    <Button variant="outline" class="w-full" @click="editPet(pet.id)"> Edit </Button>
                     <Button variant="destructive" class="ml-2 w-full" @click="deletePet(pet.id)"> Delete </Button>
                 </CardFooter>
             </Card>

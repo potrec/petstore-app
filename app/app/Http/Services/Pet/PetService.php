@@ -31,4 +31,14 @@ class PetService extends Service
     {
         return Http::get("{$this->baseUrl}/pet/{$id}");
     }
+
+    public function createPet(array $data): Response
+    {
+        return Http::post("{$this->baseUrl}/pet", $data);
+    }
+
+    public function updatePet(array $data): Response
+    {
+        return Http::put("{$this->baseUrl}/pet", $data);
+    }
 }

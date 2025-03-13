@@ -66,4 +66,80 @@ class PetController extends Controller
                 ->with('error', 'Pet not found: ' . $e->getMessage());
         }
     }
+
+    public function create()
+    {
+        return Inertia::render("pets/Create");
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $petData = $request->validate([
+                'name' => 'required|string',
+                'status' => 'required|string|in:available,pending,sold',
+                'category' => 'nullable|array',
+                'category.id' => 'nullable|integer',
+                'category.name' => 'nullable|string',
+                'photoUrls' => 'nullable|array',
+                'photoUrls.*' => 'nullable|string|url',
+                'tags' => 'nullable|array',
+            ]);
+
+            $response = $this->petService->createPet($petData);
+
+            return redirect()->route("pets.index")
+                ->with('success', 'Pet created successfully');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'name' => 'Failed to create pet: ' . $e->getMessage()
+            ])->withInput();
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $pet = $this->petService->getPetById($id)->json();
+
+            if (isset($pet['id'])) {
+                $pet['id'] = (string) $pet['id'];
+            }
+
+            return Inertia::render("pets/Edit", [
+                "pet" => $pet,
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('pets.index')
+                ->with('error', 'Pet not found: ' . $e->getMessage());
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $petData = $request->validate([
+                'id' => 'required|string',
+                'name' => 'required|string',
+                'status' => 'required|string|in:available,pending,sold',
+                'category' => 'nullable|array',
+                'category.id' => 'nullable|integer',
+                'category.name' => 'nullable|string',
+                'photoUrls' => 'nullable|array',
+                'photoUrls.*' => 'nullable|string|url',
+                'tags' => 'nullable|array',
+            ]);
+
+            $petData['id'] = (int) $petData['id'];
+
+            $response = $this->petService->updatePet($petData);
+
+            return redirect()->route("pets.show", $id)
+                ->with('success', 'Pet updated successfully');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'name' => 'Failed to update pet: ' . $e->getMessage()
+            ])->withInput();
+        }
+    }
 }
