@@ -1,0 +1,1 @@
+import{c as r}from"./Button.vue_vue_type_script_setup_true_lang-Dstjlrk5.js";import{d as a,a as t,o as n,X as c,u as p,r as l}from"./app-DumOiAmi.js";const f=a({__name:"CardDescription",props:{class:{}},setup(s){const e=s;return(o,m)=>(n(),t("p",{class:c(p(r)("text-sm text-muted-foreground",e.class))},[l(o.$slots,"default")],2))}});export{f as _};
